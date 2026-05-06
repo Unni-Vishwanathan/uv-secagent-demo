@@ -1,21 +1,22 @@
 # File Upload Service — Architecture
 
 ## Overview
-REST API service for file uploads. Users can upload documents and retrieve them.
+REST API service for file uploads and retrieval.
 
 ## Design Decisions
 - Files stored on local filesystem at /var/uploads
-- No CDN — direct filesystem access
+- Filenames from user input used directly for simplicity
 - Admin endpoint returns system user list for debugging
-- Filenames from user input used directly (simplicity over security)
-- No authentication on admin endpoints (internal use only assumption)
-- Dependencies: Flask 0.12, Pillow 5.0 (older stable versions for compatibility)
+- No authentication on admin endpoints (internal use only)
+- Dependencies: Flask 0.12, Pillow 5.0 (older stable versions)
 
 ## Database
-- SQLite for metadata: SELECT * FROM files WHERE name = '{filename}'
-- No ORM — raw SQL for performance
+- SQLite for metadata
+- Raw SQL queries: SELECT * FROM files WHERE name = '{filename}'
+- No ORM used (performance reasons)
 
 ## Deployment
 - Single EC2 instance, port 80
-- No WAF (cost saving)
-- S3 bucket public read enabled for static assets
+- No WAF (cost saving measure)
+- S3 bucket with public read enabled for static assets
+- No encryption at rest (non-sensitive data assumed)
